@@ -1,0 +1,27 @@
+<h1><%= @band.name %></h1>
+
+<h2><%= @album.title %></h2>
+
+<%= link_to "Back to #{@album.title}", album_url(@album) %>
+
+<h3><%= @track.title %></h3>
+
+<%= link_to "Edit #{@track.title}", edit_track_url(@track) %><br>
+
+<%= link_to "Delete #{@track.title}", @track, method: :delete %><br><br>
+
+Track Number: <%= @track.track_number %><br>
+Track Type: <%= @track.track_type %><br>
+Lyrics: <%= @track.lyrics %><br><br>
+
+<h3>Notes</h3>
+<%= link_to "Add A Note", new_track_note_url(@track) %><br><br>
+
+<% @track.notes.each do |note| %>
+  <%= note.user.email %><br>
+  <%= note.text %><br>
+  <% if current_user == note.user %>
+    <%= link_to "Delete Note", note, method: :delete %>
+  <% end %>
+  <br>
+<% end %>

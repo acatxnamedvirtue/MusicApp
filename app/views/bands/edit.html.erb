@@ -1,0 +1,5 @@
+<h1>Edit <%= @band.name %></h1>
+
+<%= render "shared/errors" %>
+
+<%= render partial: "form", locals: {band: @band} %>

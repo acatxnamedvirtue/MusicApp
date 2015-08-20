@@ -1,4 +1,4 @@
-require 'bcrypt-ruby'
+require 'BCrypt'
 
 class User < ActiveRecord::Base
   attr_reader :password
@@ -8,8 +8,14 @@ class User < ActiveRecord::Base
   validates :password, length: { minimum: 6, allow_nil: true}
   after_initialize :ensure_session_token
 
-  def self.find_by_credentials
-    user = User.findy_by(email: email)
+  has_many :notes,
+    dependent: :destroy,
+    class_name: 'Note',
+    foreign_key: :user_id,
+    primary_key: :id
+
+  def self.find_by_credentials(email, password)
+    user = User.find_by(email: email)
 
     return nil if user.nil?
     user.is_password?(password) ? user : nil
@@ -32,15 +38,6 @@ class User < ActiveRecord::Base
 
   def is_password?(password)
     BCrypt::Password.new(self.password_digest).is_password?(password)
-  end
-
-  def login!
-    session[:session_token] = reset_session_token!
-  end
-
-  def logout!
-    current_user.reset_session_token!
-    session[:session_token] = nil
   end
 
   private

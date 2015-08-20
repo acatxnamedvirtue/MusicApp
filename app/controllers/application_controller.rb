@@ -11,16 +11,25 @@ class ApplicationController < ActionController::Base
     return nil unless session[:session_token]
     @current_user ||= User.find_by_session_token(session[:session_token])
   end
-  
+
   def login_user!(user)
-    user.login!
+    session[:session_token] = user.reset_session_token!
   end
 
-  def logout_user!(user)
-    user.logout!
+  def logout_user!
+    current_user.reset_session_token!
+    self.session[:session_token] = nil
   end
 
   def logged_in?
     !current_user.nil?
+  end
+
+  def require_no_user!
+    redirect_to "users/#{current_user.id}" unless !logged_in?
+  end
+
+  def require_user!
+    redirect_to new_session_url unless logged_in?
   end
 end

@@ -1,0 +1,22 @@
+<h1><%= @band.name %></h1>
+
+<h2><%= @album.title %></h2>
+
+<h3><%= @track.title %></h3>
+
+<%= link_to "Back to #{@track.title}", track_url(@track) %>
+
+<h3>Add a new Note</h3>
+
+<form action="<%= notes_url %>" method="POST">
+  <%= form_auth_token %>
+
+  <input type="hidden" name="note[track_id]" value="<%= @track.id %>">
+
+  <label for="text">Note Text</label><br>
+  <textarea id="text" name="note[text]">
+    <%= @note.text %>
+  </textarea>
+  <br>
+  <button>Submit</button>
+</form>
